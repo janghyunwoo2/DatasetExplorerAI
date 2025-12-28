@@ -51,19 +51,19 @@ jobs:
         docker push ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest
       shell: bash
 
-    # # 아래 파일은 소스코드를 체크아웃함으로써 획득할 수 있다.
-    # # AWS의 EC2에 docker-compose.yml 파일을 업로드
-    # # appleboy/scp-action@master => EC2에 파일 카피 기능 제공 도구
-    # - name: Copy docker-compose.yml to EC2
-    #   uses: appleboy/scp-action@master
-    #   with:
-    #     host: ${{ secrets.EC2_HOST_IP }}
-    #     username: ${{ secrets.EC2_USERNAME }}
-    #     key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-    #     port: 22                
-    #     source: "./docker-compose.yml"
-    #     # /home/ubuntu/deploy/dev/docker-compose.yml 생성됨
-    #     target: "/home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent"
+    # 아래 파일은 소스코드를 체크아웃함으로써 획득할 수 있다.
+    # AWS의 EC2에 docker-compose.yml 파일을 업로드
+    # appleboy/scp-action@master => EC2에 파일 카피 기능 제공 도구
+    - name: Copy docker-compose.yml to EC2
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.EC2_HOST_IP }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+        port: 22                
+        source: "./docker-compose.yml"
+        # /home/ubuntu/deploy/dev/docker-compose.yml 생성됨
+        target: "/home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent"
 
     # # --- EC2로 SSH 접속 및 배포 스크립트 실행 ---
     # - name: Deploy to EC2 via SSH
