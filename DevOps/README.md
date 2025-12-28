@@ -9,11 +9,11 @@
 
 *   **FastAPI 백엔드 이미지 빌드:**
     ```bash
-    docker build --build-arg PYTHON_VERSION=3.11 -f devops/dockerfiles/backend.Dockerfile -t dataset-explorer-backend:latest .
+    docker build -f devops/dockerfiles/backend.Dockerfile -t dataset-explorer-backend:latest .
     ```
 *   **Streamlit 프론트엔드 이미지 빌드:**
     ```bash
-    docker build --build-arg PYTHON_VERSION=3.11 -f devops/dockerfiles/frontend.Dockerfile -t dataset-explorer-frontend:latest .
+    docker build -f devops/dockerfiles/frontend.Dockerfile -t dataset-explorer-frontend:latest .
     ```
 
 #### **2. 빌드된 도커 이미지 확인**
