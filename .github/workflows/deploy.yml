@@ -65,19 +65,30 @@ jobs:
         # /home/ubuntu/deploy/dev/docker-compose.yml 생성됨
         target: "/home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent"
 
-    # # --- EC2로 SSH 접속 및 배포 스크립트 실행 ---
-    # - name: Deploy to EC2 via SSH
-    #   uses: appleboy/ssh-action@v0.1.6
-    #   with:
-    #     host: ${{ secrets.EC2_HOST_IP }}          # EC2 인스턴스의 Public IP (GitHub Secrets)
-    #     username: ${{ secrets.EC2_USERNAME }}     # EC2 사용자 이름 (예: ubuntu, ec2-user)
-    #     key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}   # EC2 SSH Private Key (GitHub Secrets)
-    #     # deploy.sh 스크립트 실행 시 필요한 환경 변수들을 전달
-    #     script: |
-    #       export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
-    #       export DOCKER_PASSWORD="${{ secrets.DOCKER_PASSWORD }}"
-    #       # EC2에 클론된 프로젝트 디렉토리로 이동하여 deploy.sh 실행
-    #       # cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent && bash devops/deploy/deploy.sh
-    #       echo '일단 완료!'
+    # --- EC2로 SSH 접속 및 배포 스크립트 실행 ---
+    - name: Deploy to EC2 via SSH
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.EC2_HOST_IP }}          # EC2 인스턴스의 Public IP (GitHub Secrets)
+        username: ${{ secrets.EC2_USERNAME }}     # EC2 사용자 이름 (예: ubuntu, ec2-user)
+        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}   # EC2 SSH Private Key (GitHub Secrets)
+        # deploy.sh 스크립트 실행 시 필요한 환경 변수들을 전달
+        script: |
+          export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
+          export DOCKER_PASSWORD="${{ secrets.DOCKER_PASSWORD }}"
+          # EC2에 클론된 프로젝트 디렉토리로 이동하여 deploy.sh 실행
+          # cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent && bash devops/deploy/deploy.sh
+          cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent
 
+          # 최신 이미지 가져오기 -> 
+          # 최초 cicd 할때는 이미지를 모두 다운로드
+          # 이후 cicd 할때는 변경된 이미지(최신)만 다운로드
+          docker-compose pull
+
+          # 컨테이너 구성
+          docker-compose up -d
+
+          # docker-compose.yml 구성이 변경되어서 
+          # 이미지가 미사용되는것이 있을수 있음 -> 공간확보
+          docker image prune -f
           
