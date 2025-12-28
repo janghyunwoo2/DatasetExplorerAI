@@ -38,7 +38,7 @@ jobs:
       # build context를 현재 디렉토리(루트)로 지정하고 -f 옵션으로 Dockerfile 경로를 명시
       run: |
         ls -al
-        docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest -f ./devops/dockerfiles/backend.Dockerfile .
+        docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest -f ./DevOps/dockerfiles/backend.Dockerfile .
         docker push ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest
       shell: bash
 
@@ -47,7 +47,7 @@ jobs:
     - name: Build & push Streamlit Docker Image
       # build context를 현재 디렉토리(루트)로 지정하고 -f 옵션으로 Dockerfile 경로를 명시
       run: |
-        docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest -f ./devops/dockerfiles/frontend.Dockerfile .
+        docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest -f ./DevOps/dockerfiles/frontend.Dockerfile .
         docker push ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest
       shell: bash
 
