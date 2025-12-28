@@ -1,0 +1,65 @@
+# devops/github-actions/main.yml
+name: Dataset Explorer AI Agent CI/CD (Develop)
+
+on:
+  push:
+    branches:
+      - feature/t1/gitaction-test # develop 브랜치에 푸시될 때 워크플로우 실행
+  workflow_dispatch: # 수동 실행을 위한 트리거 추가
+
+env:
+  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_USERNAME }} # Docker Hub 유저명 (GitHub Secrets)
+  DOCKER_REPO_BACKEND: dataset-explorer-backend # Docker Hub 레포지토리 이름
+  DOCKER_REPO_FRONTEND: dataset-explorer-frontend # Docker Hub 레포지토리 이름
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # GitHub Actions 워커의 OS
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 검증
+      run: |
+        pwd
+        ls -al
+      shell: bash
+
+    # - name: Login to Docker Hub
+    #   uses: docker/login-action@v3
+    #   with:
+    #     username: ${{ secrets.DOCKER_USERNAME }}
+    #     password: ${{ secrets.DOCKER_PASSWORD }} # Docker Hub 토큰 (GitHub Secrets)
+
+    # # --- FastAPI (backend) 이미지 빌드 및 Docker Hub 푸시 ---
+    # - name: Build FastAPI Docker Image
+    #   # build context를 현재 디렉토리(루트)로 지정하고 -f 옵션으로 Dockerfile 경로를 명시
+    #   run: docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest -f devops/dockerfiles/backend.Dockerfile .
+
+    # - name: Push FastAPI Image to Docker Hub
+    #   run: docker push ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest
+
+    # # --- Streamlit (frontend) 이미지 빌드 및 Docker Hub 푸시 ---
+    # - name: Build Streamlit Docker Image
+    #   # build context를 현재 디렉토리(루트)로 지정하고 -f 옵션으로 Dockerfile 경로를 명시
+    #   run: docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest -f devops/dockerfiles/frontend.Dockerfile .
+
+    # - name: Push Streamlit Image to Docker Hub
+    #   run: docker push ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest
+    
+    # # --- EC2로 SSH 접속 및 배포 스크립트 실행 ---
+    # - name: Deploy to EC2 via SSH
+    #   uses: appleboy/ssh-action@v0.1.6
+    #   with:
+    #     host: ${{ secrets.EC2_HOST_IP }}          # EC2 인스턴스의 Public IP (GitHub Secrets)
+    #     username: ${{ secrets.EC2_USERNAME }}     # EC2 사용자 이름 (예: ubuntu, ec2-user)
+    #     key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}   # EC2 SSH Private Key (GitHub Secrets)
+    #     # deploy.sh 스크립트 실행 시 필요한 환경 변수들을 전달
+    #     script: |
+    #       export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
+    #       export DOCKER_PASSWORD="${{ secrets.DOCKER_PASSWORD }}"
+    #       # EC2에 클론된 프로젝트 디렉토리로 이동하여 deploy.sh 실행
+    #       cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent && bash devops/deploy/deploy.sh
+
+          
