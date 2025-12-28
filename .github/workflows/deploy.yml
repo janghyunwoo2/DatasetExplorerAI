@@ -76,6 +76,10 @@ jobs:
         script: |
           export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
           export DOCKER_PASSWORD="${{ secrets.DOCKER_PASSWORD }}"
+          export DOCKER_HUB_USERNAME="${{ env.DOCKER_HUB_USERNAME }}"
+          export DOCKER_REPO_BACKEND="${{ env.DOCKER_REPO_BACKEND }}"
+          export DOCKER_REPO_FRONTEND="${{ env.DOCKER_REPO_FRONTEND }}" 
+
           # EC2에 클론된 프로젝트 디렉토리로 이동하여 deploy.sh 실행
           # cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent && bash devops/deploy/deploy.sh
           cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent
