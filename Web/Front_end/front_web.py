@@ -1,11 +1,12 @@
 import streamlit as st
 import requests as req
+import os
 
 #a = 1
 #print('사용자 입력후 엔티치면 계속 전체가 구동되는지 점검-')#, a)
 
 # 전역설정
-API_URL = 'http://localhost:8000/chat' # fastapi 주소
+API_URL = os.getenv("FASTAPI_URL", "http://localhost:8000/chat") # fastapi 주소
 st.set_page_config(page_title='식사 메뉴 해결사')#, page_icon='')
 st.title('AI 식사 메뉴 해결사 - 킹')
 st.caption('예상, 점심/저녁등 시점, 날씨, 기분, 단체여부등 알려주시면 메뉴를 추천해 드립니다.')
@@ -56,6 +57,7 @@ if prompt := st.chat_input('현재 상황을 자세히 입력하세요...') :
 
         # 3-1. 서버측 사용자의 질의 전송
         result = None
+        #res = ''
         try:
             res = req.post(API_URL, json={"question":prompt})  
             if res.status_code == 200: # 응답 성공
