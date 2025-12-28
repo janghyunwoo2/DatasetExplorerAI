@@ -37,6 +37,7 @@ jobs:
     - name: Build & push FastAPI Docker Image
       # build context를 현재 디렉토리(루트)로 지정하고 -f 옵션으로 Dockerfile 경로를 명시
       run: |
+        ls ./devops/dockerfiles
         docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest -f ./devops/dockerfiles/backend.Dockerfile .
         docker push ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest
       shell: bash
