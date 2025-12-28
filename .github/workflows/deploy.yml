@@ -36,7 +36,7 @@ jobs:
     # --- FastAPI (backend) 이미지 빌드 및 Docker Hub 푸시 ---
     - name: Build FastAPI Docker Image
       # build context를 현재 디렉토리(루트)로 지정하고 -f 옵션으로 Dockerfile 경로를 명시
-      run: docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest -f devops/dockerfiles/backend.Dockerfile .
+      run: docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest -f ./devops/dockerfiles/backend.Dockerfile .
 
     - name: Push FastAPI Image to Docker Hub
       run: docker push ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest
@@ -44,7 +44,7 @@ jobs:
     # --- Streamlit (frontend) 이미지 빌드 및 Docker Hub 푸시 ---
     - name: Build Streamlit Docker Image
       # build context를 현재 디렉토리(루트)로 지정하고 -f 옵션으로 Dockerfile 경로를 명시
-      run: docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest -f devops/dockerfiles/frontend.Dockerfile .
+      run: docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest -f ./devops/dockerfiles/frontend.Dockerfile .
 
     - name: Push Streamlit Image to Docker Hub
       run: docker push ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest
