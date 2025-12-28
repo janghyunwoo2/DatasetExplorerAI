@@ -1,9 +1,10 @@
 # devops/docker-compose.yml
 services:
   backend-service:
-    build:
-      context: . # build context를 프로젝트 루트 디렉토리(dataset-explorer-agent/)로 지정
-      dockerfile: devops/dockerfiles/backend.Dockerfile # devops/dockerfiles/backend.Dockerfile을 사용
+    # build:
+    #   context: . # build context를 프로젝트 루트 디렉토리(dataset-explorer-agent/)로 지정
+    #   dockerfile: devops/dockerfiles/backend.Dockerfile # devops/dockerfiles/backend.Dockerfile을 사용
+    image: ${DOCKER_HUB_USERNAME}/${DOCKER_REPO_BACKEND}:latest
     container_name: dataset_explorer_fastapi
     ports:
       - "8000:8000" # 호스트의 8000번 포트를 컨테이너의 8000번 포트로 연결 (외부 노출)
@@ -14,9 +15,10 @@ services:
       - app-network
 
   frontend-service:
-    build:
-      context: . # build context를 프로젝트 루트 디렉토리(dataset-explorer-agent/)로 지정
-      dockerfile: devops/dockerfiles/frontend.Dockerfile # devops/dockerfiles/frontend.Dockerfile을 사용
+    # build:
+    #   context: . # build context를 프로젝트 루트 디렉토리(dataset-explorer-agent/)로 지정
+    #   dockerfile: devops/dockerfiles/frontend.Dockerfile # devops/dockerfiles/frontend.Dockerfile을 사용
+    image: ${DOCKER_HUB_USERNAME}/${DOCKER_REPO_FRONTEND}:latest
     container_name: dataset_explorer_streamlit
     ports:
       - "8501:8501" # 호스트의 8501번 포트를 컨테이너의 8501번 포트로 연결 (외부 노출)

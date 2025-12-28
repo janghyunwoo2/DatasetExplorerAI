@@ -66,13 +66,13 @@ jobs:
         target: "/home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent"
 
     # --- EC2로 SSH 접속 및 배포 스크립트 실행 ---
-    - name: Deploy to EC2 via SSH
-      uses: appleboy/ssh-action@v0.1.6
+    - name: Docker-Compose Up to EC2 via ssh
+      uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.EC2_HOST_IP }}          # EC2 인스턴스의 Public IP (GitHub Secrets)
-        username: ${{ secrets.EC2_USERNAME }}     # EC2 사용자 이름 (예: ubuntu, ec2-user)
-        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}   # EC2 SSH Private Key (GitHub Secrets)
-        # deploy.sh 스크립트 실행 시 필요한 환경 변수들을 전달
+        host: ${{ secrets.EC2_HOST_IP }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+        port: 22
         script: |
           export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
           export DOCKER_PASSWORD="${{ secrets.DOCKER_PASSWORD }}"
