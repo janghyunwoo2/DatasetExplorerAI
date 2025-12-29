@@ -27,8 +27,8 @@ llm_with_tools = llm.bind_tools(tools)
 
 # 3. 퓨샷 프롬프트 > 참고용
 examples =[
-    {"input":"","output":""},
-    {"input":"","output":""}
+    {"input":"러닝 인구 데이터 찾아줘","output":"국가통계포털을 추천드립니다."},
+    {"input":"국내 카페 지역 분포 데이터 찾아줘","output":"공공데이터 포털을 추천드립니다. 이외에도 카카오맵/네이버지도API를 통해 수집 가능합니다."}
 ]
 example_format = ChatPromptTemplate.from_messages([
   ('human',"{input}"),
