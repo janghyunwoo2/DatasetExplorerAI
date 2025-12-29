@@ -18,7 +18,7 @@ from tools import rag_search
 llm = ChatBedrockConverse(
     model       = os.getenv("BEDROCK_MODEL_ID"),
     region_name = os.getenv("AWS_REGION"),
-    temperature = 0.5,
+    temperature = 0.1,
     max_tokens  = 1000
     )
 # 2. 외부 도구 가져오기 및 LLM 등록
@@ -27,8 +27,8 @@ llm_with_tools = llm.bind_tools(tools)
 
 # 3. 퓨샷 프롬프트 > 참고용
 examples =[
-    {"input":"비 오는 날엔 국물요리지","output":"칼국수나 잔치국수 어떨까요?"},
-    {"input":"다이어트를 위해 저칼로리로 먹자","output":"채소가 많은 음식이 어떨까요? 샌드위치"}
+    {"input":"","output":""},
+    {"input":"","output":""}
 ]
 example_format = ChatPromptTemplate.from_messages([
   ('human',"{input}"),
@@ -42,7 +42,7 @@ few_shot_prompt = FewShotChatMessagePromptTemplate(
 final_prompt = ChatPromptTemplate.from_messages([
     # 페르소나
     # 도구사용 > 현재 RAG > RAG에는 LLM이 모르는 식당정보가 준비됨
-    ('system','당신은 센스있는 식사메뉴 추천 전문가입니다. 사용자의 상황에 맞게 메뉴를 추천하고, 필요하면 도구를 사용하여 식당을 찾으세요'),
+    ('system','당신은 개발자에게 데이터셋을 제공하는 데이터 탐색 전문가입니다. 사용자의 요청에 맞는 데이터셋을 추천하고, 필요하면 도구를 사용하여 데이터셋 출처를 찾으세요'),
     # 퓨샷
     few_shot_prompt,
     ('human','{messages}')
@@ -90,9 +90,9 @@ def final_answer_node(state:AgentState):
 
 # 7. 랭그래프 연결
 workflow = StateGraph(AgentState) # 에이전트 상태 그래프 연동
-workflow.add_node("thinking",    thinking_node)
-workflow.add_node("tools",            tool_node)
-workflow.add_node("final_answer",final_answer_node)
+workflow.add_node("thinking",     thinking_node)
+workflow.add_node("tools",        tool_node)
+workflow.add_node("final_answer", final_answer_node)
 workflow.set_entry_point("thinking") # 사용자 질의 후 최초 invoke 진입할 노드
 
 def check_tool_node(state:AgentState): # 도구 사용여부 체크(LLM은 도구사용 거의 X)
@@ -110,4 +110,4 @@ workflow.add_edge("final_answer", END) # 추론과정 마무리
 
 # 8. 랭그래프 컴파일 -> 워크 플로우 객체
 # 랭그래프객체 => 전역변수
-랭그래프객체 = workflow.compile()
+graph_object = workflow.compile()
