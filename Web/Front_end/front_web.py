@@ -7,9 +7,9 @@ import os
 
 # 전역설정
 API_URL = os.getenv("FASTAPI_URL", "http://localhost:8000/chat") # fastapi 주소
-st.set_page_config(page_title='식사 메뉴 해결사')#, page_icon='')
-st.title('AI 식사 메뉴 해결사 - 킹')
-st.caption('예상, 점심/저녁등 시점, 날씨, 기분, 단체여부등 알려주시면 메뉴를 추천해 드립니다.')
+st.set_page_config(page_title='데이터셋 탐험가 AI 에이전트')#, page_icon='')
+st.title('데이터셋 탐험가 AI 에이전트')
+st.caption('원하는 데이터셋의 특징을 입력하면, Agent가 이를 이해하고 관련 데이터셋을 검색합니다.')
 
 # session state 초기화 -> 현재 코드가 몇번이고 재실행되더라고 데이터 유지,전역
 if "messages" not in st.session_state: # 최초에는 아무것도 없음(1회만 수행됨)
@@ -17,7 +17,7 @@ if "messages" not in st.session_state: # 최초에는 아무것도 없음(1회�
         # 페르소나는 백엔드에서 구성
         {
             'role':'assistant',
-            'content':'안녕하세요! 오늘 식사는 어떤 것이 땡기나요? (예산, 점심/저녁등 시점, 날씨, 기분, 단체여부등 알려주시면 메뉴를 추천해 드립니다.)'
+            'content':'안녕하세요! 어떤 데이터셋이 필요하신가요?<br>(특징, 키워드 등을 통해 관련 데이터셋을 제공해 드립니다.)'
         }
     ]
 
@@ -25,7 +25,7 @@ if "messages" not in st.session_state: # 최초에는 아무것도 없음(1회�
 for msg in st.session_state.messages:
     # 존재하는 모든 대화 내용을 출력
     with st.chat_message(msg['role']): # assistant or user
-        st.markdown(msg['content'])
+        st.markdown(msg['content'], unsafe_allow_html=True)
 
 # ui
 # st.chat_input() -> 화면단에서 작성후 엔티치면 자동 호출됨
@@ -53,7 +53,7 @@ if prompt := st.chat_input('현재 상황을 자세히 입력하세요...') :
     #    -> 서버 응답 -> assistant의 응답
     with st.chat_message('assistant'):
         msg_holder = st.empty()
-        msg_holder.markdown('고민 중.... ㅡ,.ㅡ^')
+        msg_holder.markdown('데이터셋을 탐색하는 중입니다...🔍')
 
         # 3-1. 서버측 사용자의 질의 전송
         result = None
@@ -71,7 +71,7 @@ if prompt := st.chat_input('현재 상황을 자세히 입력하세요...') :
         except Exception as e:
             # 더미 구성
             print( e )
-            result = "사용자가 너무 많습니다 10초후에 다시 시도해 주세요"
+            result = "서버와 연결할 수 없습니다. 백엔드 서버가 켜져 있는지 확인해 주세요."
         # 3-2. 화면처리
         msg_holder.markdown( result )
         # 3-3. 전역 상태 관리 변수에 추가
