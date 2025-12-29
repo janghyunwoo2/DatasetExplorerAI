@@ -9,7 +9,7 @@ import os
 API_URL = os.getenv("FASTAPI_URL", "http://localhost:8000/chat") # fastapi 주소
 st.set_page_config(page_title='데이터셋 탐험가 AI 에이전트')#, page_icon='')
 st.title('데이터셋 탐험가 AI 에이전트')
-st.caption('원하는 데이터셋의 특징을 입력하면, Agent가 이를 이해하고 관련 데이터셋을 검색합니다.')
+st.caption('원하는 데이터셋의 특징을 입력하면, Agent가 이를 이해하고 관련 데이터셋을 탐색합니다.')
 
 # session state 초기화 -> 현재 코드가 몇번이고 재실행되더라고 데이터 유지,전역
 if "messages" not in st.session_state: # 최초에는 아무것도 없음(1회만 수행됨)
@@ -52,32 +52,31 @@ if prompt := st.chat_input('현재 상황을 자세히 입력하세요...') :
     # 3. LLM에게 문의 -> 서버 요청 -> bedrock 요청 -> bedrock 응답 
     #    -> 서버 응답 -> assistant의 응답
     with st.chat_message('assistant'):
-        msg_holder = st.empty()
-        msg_holder.markdown('데이터셋을 탐색하는 중입니다...🔍')
-
-        # 3-1. 서버측 사용자의 질의 전송
-        result = None
-        #res = ''
-        try:
-            res = req.post(API_URL, json={"question":prompt})  
-            if res.status_code == 200: # 응답 성공
-                result = res.json().get('response','응답 없음')                
-            else:
-                result = f'서버측 오류 {res.status_code}'
-            # 추후, 백엔드 구성후 교체
-            #import time
-            #time.sleep(2) # 서버 통신 시간을 시뮬레이션
-            #res = "더미 응답 : 치킨으로 가보세요!!"
-        except Exception as e:
-            # 더미 구성
-            print( e )
-            result = "서버와 연결할 수 없습니다. 백엔드 서버가 켜져 있는지 확인해 주세요."
+        # msg_holder = st.empty()
+        # msg_holder.markdown('데이터셋을 탐색하는 중입니다...🔍')
+        with st.spinner('데이터셋을 탐색하는 중입니다...🔍'):
+            # 3-1. 서버측 사용자의 질의 전송
+            result = None     
+            try:
+                res = req.post(API_URL, json={"question":prompt})  
+                if res.status_code == 200: # 응답 성공
+                    result = res.json().get('response','응답 없음')                
+                else:
+                    result = f'서버측 오류 {res.status_code}'
+                # 추후, 백엔드 구성후 교체
+                #import time
+                #time.sleep(2) # 서버 통신 시간을 시뮬레이션
+                #res = "더미 응답 : 치킨으로 가보세요!!"
+            except Exception as e:
+                # 더미 구성
+                print( e )
+                result = "서버와 연결할 수 없습니다. 백엔드 서버가 켜져 있는지 확인해 주세요."
         # 3-2. 화면처리
-        msg_holder.markdown( result )
+        st.markdown( result )
         # 3-3. 전역 상태 관리 변수에 추가
         st.session_state.messages.append({
             "role":"assistant",
-            "content":res
+            "content":result
         })
         pass
 
