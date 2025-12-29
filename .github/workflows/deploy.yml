@@ -4,7 +4,7 @@ name: Dataset Explorer AI Agent CI/CD (Develop)
 on:
   push:
     branches:
-      - feature/t1/gitaction-test # develop 브랜치에 푸시될 때 워크플로우 실행
+      - develop # develop 브랜치에 푸시될 때 워크플로우 실행
   workflow_dispatch: # 수동 실행을 위한 트리거 추가
 
 env:
@@ -17,82 +17,80 @@ jobs:
     runs-on: ubuntu-latest # GitHub Actions 워커의 OS
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-    # 프로젝트 파일들 제대로 가져갔는지 확인
-    - name: 검증
-      run: |
-        pwd
-        ls -al
-      shell: bash
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      # 프로젝트 파일들 제대로 가져갔는지 확인
+      - name: 검증
+        run: |
+          pwd
+          ls -al
+        shell: bash
 
-    # 도커 허브 로그인
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }} # Docker Hub 토큰 (GitHub Secrets)
+      # 도커 허브 로그인
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }} # Docker Hub 토큰 (GitHub Secrets)
 
-    # --- FastAPI (backend) 이미지 빌드 및 Docker Hub 푸시 ---
-    - name: Build & push FastAPI Docker Image
-      # build context를 현재 디렉토리(루트)로 지정하고 -f 옵션으로 Dockerfile 경로를 명시
-      run: |
-        ls -al
-        docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest -f ./DevOps/dockerfiles/backend.Dockerfile .
-        docker push ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest
-      shell: bash
+      # --- FastAPI (backend) 이미지 빌드 및 Docker Hub 푸시 ---
+      - name: Build & push FastAPI Docker Image
+        # build context를 현재 디렉토리(루트)로 지정하고 -f 옵션으로 Dockerfile 경로를 명시
+        run: |
+          ls -al
+          docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest -f ./DevOps/dockerfiles/backend.Dockerfile .
+          docker push ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_BACKEND }}:latest
+        shell: bash
 
+      # --- Streamlit (frontend) 이미지 빌드 및 Docker Hub 푸시 ---
+      - name: Build & push Streamlit Docker Image
+        # build context를 현재 디렉토리(루트)로 지정하고 -f 옵션으로 Dockerfile 경로를 명시
+        run: |
+          docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest -f ./DevOps/dockerfiles/frontend.Dockerfile .
+          docker push ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest
+        shell: bash
 
-    # --- Streamlit (frontend) 이미지 빌드 및 Docker Hub 푸시 ---
-    - name: Build & push Streamlit Docker Image
-      # build context를 현재 디렉토리(루트)로 지정하고 -f 옵션으로 Dockerfile 경로를 명시
-      run: |
-        docker build -t ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest -f ./DevOps/dockerfiles/frontend.Dockerfile .
-        docker push ${{ env.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_REPO_FRONTEND }}:latest
-      shell: bash
+      # 아래 파일은 소스코드를 체크아웃함으로써 획득할 수 있다.
+      # AWS의 EC2에 docker-compose.yml 파일을 업로드
+      # appleboy/scp-action@master => EC2에 파일 카피 기능 제공 도구
+      - name: Copy docker-compose.yml to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST_IP }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: 22
+          source: "./docker-compose.yml"
+          # /home/ubuntu/deploy/dev/docker-compose.yml 생성됨
+          target: "/home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent"
 
-    # 아래 파일은 소스코드를 체크아웃함으로써 획득할 수 있다.
-    # AWS의 EC2에 docker-compose.yml 파일을 업로드
-    # appleboy/scp-action@master => EC2에 파일 카피 기능 제공 도구
-    - name: Copy docker-compose.yml to EC2
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.EC2_HOST_IP }}
-        username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-        port: 22                
-        source: "./docker-compose.yml"
-        # /home/ubuntu/deploy/dev/docker-compose.yml 생성됨
-        target: "/home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent"
+      # --- EC2로 SSH 접속 및 배포 스크립트 실행 ---
+      - name: Docker-Compose Up to EC2 via ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST_IP }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
+            export DOCKER_PASSWORD="${{ secrets.DOCKER_PASSWORD }}"
+            export DOCKER_HUB_USERNAME="${{ env.DOCKER_HUB_USERNAME }}"
+            export DOCKER_REPO_BACKEND="${{ env.DOCKER_REPO_BACKEND }}"
+            export DOCKER_REPO_FRONTEND="${{ env.DOCKER_REPO_FRONTEND }}" 
 
-    # --- EC2로 SSH 접속 및 배포 스크립트 실행 ---
-    - name: Docker-Compose Up to EC2 via ssh
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.EC2_HOST_IP }}
-        username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-        port: 22
-        script: |
-          export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
-          export DOCKER_PASSWORD="${{ secrets.DOCKER_PASSWORD }}"
-          export DOCKER_HUB_USERNAME="${{ env.DOCKER_HUB_USERNAME }}"
-          export DOCKER_REPO_BACKEND="${{ env.DOCKER_REPO_BACKEND }}"
-          export DOCKER_REPO_FRONTEND="${{ env.DOCKER_REPO_FRONTEND }}" 
+            # EC2에 클론된 프로젝트 디렉토리로 이동하여 deploy.sh 실행
+            # cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent && bash devops/deploy/deploy.sh
+            cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent
 
-          # EC2에 클론된 프로젝트 디렉토리로 이동하여 deploy.sh 실행
-          # cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent && bash devops/deploy/deploy.sh
-          cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent
+            # 최신 이미지 가져오기 -> 
+            # 최초 cicd 할때는 이미지를 모두 다운로드
+            # 이후 cicd 할때는 변경된 이미지(최신)만 다운로드
+            docker-compose pull
 
-          # 최신 이미지 가져오기 -> 
-          # 최초 cicd 할때는 이미지를 모두 다운로드
-          # 이후 cicd 할때는 변경된 이미지(최신)만 다운로드
-          docker-compose pull
+            # 컨테이너 구성
+            docker-compose up -d
 
-          # 컨테이너 구성
-          docker-compose up -d
-
-          # docker-compose.yml 구성이 변경되어서 
-          # 이미지가 미사용되는것이 있을수 있음 -> 공간확보
-          docker image prune -f
-          
+            # docker-compose.yml 구성이 변경되어서 
+            # 이미지가 미사용되는것이 있을수 있음 -> 공간확보
+            docker image prune -f
