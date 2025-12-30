@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+streamlit
+requests
+boto3
+langchain-aws
+langchain-core
+python-dotenv
+
+beautifulsoup4
+selenium # 동적 웹사이트용 (필요시)
+lxml
+tqdm
+pandas
+numpy
