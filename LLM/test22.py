@@ -7,7 +7,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 dotenv_path = os.path.join(current_dir, "..", ".env")
 load_dotenv(dotenv_path)
 
-def ask_claude(user_query):
+def ask_aws_bedrock_claude(user_query):
     try:
         client = boto3.client(
             service_name="bedrock-runtime",
@@ -28,7 +28,7 @@ def ask_claude(user_query):
 # --- 코드 맨 밑에 추가 ---
 if __name__ == "__main__":
     print("🚀 Claude 엔진 테스트를 시작합니다...")
-    test_result = ask_claude("반가워! 내 이름은 Dell이야. 내 이름을 포함해서 인사해줘.")
+    test_result = ask_aws_bedrock_claude("반가워! 내 이름은 Dell이야. 내 이름을 포함해서 인사해줘.")
     print("-" * 30)
     print(f"🤖 답변: {test_result}")
     print("-" * 30)

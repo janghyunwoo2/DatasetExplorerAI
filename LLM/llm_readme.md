@@ -19,4 +19,12 @@
   
 # test33.py
     - 모듈화가 잘 되었는지 테스트 해보는 파일
-      - test22.py에서 ask_claude 함수를 가져와서 llm과 연동이 잘 되는지 테스트
+      - test22.py에서 ask_aws_bedrock_claude 함수를 가져와서 llm과 연동이 잘 되는지 테스트
+
+
+# my_explorer.py
+
+# router.py
+
+# bedrock_utils.py
+    - aws bedrock 연결 모듈화 클로드 사용(anthropic.claude-3-5-sonnet-20240620-v1:0)

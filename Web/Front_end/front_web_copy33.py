@@ -3,12 +3,19 @@ import requests
 
 # 1. 페이지 제목 및 레이아웃 설정
 st.set_page_config(page_title="따릉이 데이터 탐험가", page_icon="🚲")
-st.title("🚲 데이터셋 탐험가 에이전트")
+
+# st.title("🚲 데이터셋 탐험가 에이전트")
+user_name = st.sidebar.text_input("사용자 이름을 입력하세요", value="Dell")
+# 2. 이제 위에서 만든 user_name 변수를 사용합니다 (정의된 후 사용)
+st.title(f"🚲 {user_name}님의 데이터 탐험기")
+
 st.caption("FastAPI와 Claude 3.5 Sonnet을 이용한 데이터 질의응답 시스템")
 st.markdown("---")
 
+prompt = st.chat_input("Claude에게 궁금한 점을 물어보세요!")
+
 # 2. 채팅창 구현
-if prompt := st.chat_input("Claude에게 궁금한 점을 물어보세요!"):
+if prompt :
     
     # 사용자가 입력한 메시지 화면에 표시
     with st.chat_message("user"):
@@ -22,7 +29,7 @@ if prompt := st.chat_input("Claude에게 궁금한 점을 물어보세요!"):
                 # 백엔드 코드의 ChatRequest 규격에 맞춰 "prompt" 키를 사용합니다.
                 response = requests.post(
                     "http://127.0.0.1:8000/chat",
-                    json={"prompt": prompt},
+                    json={"prompt": prompt, "user_name" : user_name},
                     timeout=60  # LLM의 긴 답변을 고려하여 60초 대기
                 )
                 
