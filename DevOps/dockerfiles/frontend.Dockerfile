@@ -9,7 +9,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # web/backend/main.py 복사 (build context가 web/backend이므로 ./로 접근)
-COPY Web/Front_end/front_web.py .
+COPY Web/Front_end/*.py .
 
 # Streamlit 애플리케이션 실행 명령
 # 0.0.0.0으로 바인딩하여 컨테이너 외부에서 접근 가능하게 하고,
