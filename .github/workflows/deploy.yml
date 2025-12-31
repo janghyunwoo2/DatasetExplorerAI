@@ -84,6 +84,9 @@ jobs:
             # cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent && bash devops/deploy/deploy.sh
             cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent
 
+            # 컨테이너 정리
+            docker-compose down
+
             # 최신 이미지 가져오기 -> 
             # 최초 cicd 할때는 이미지를 모두 다운로드
             # 이후 cicd 할때는 변경된 이미지(최신)만 다운로드
