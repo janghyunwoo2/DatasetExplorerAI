@@ -80,6 +80,11 @@ jobs:
             export DOCKER_REPO_BACKEND="${{ env.DOCKER_REPO_BACKEND }}"
             export DOCKER_REPO_FRONTEND="${{ env.DOCKER_REPO_FRONTEND }}" 
 
+            # 임시 환경 변수
+            export BEDROCK_MODEL_ID="${{ secrets.BEDROCK_MODEL_ID }}"
+            export AWS_REGION="${{ secrets.AWS_REGION }}"
+            export AWS_BEARER_TOKEN_BEDROCK="${{ secrets.AWS_BEARER_TOKEN_BEDROCK }}"
+
             # EC2에 클론된 프로젝트 디렉토리로 이동하여 deploy.sh 실행
             # cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent && bash devops/deploy/deploy.sh
             cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent
