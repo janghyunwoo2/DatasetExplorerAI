@@ -1,8 +1,12 @@
-fastapi
-uvicorn
-streamlit
-requests
 boto3
+faiss-cpu
+fastapi
 langchain-aws
+langchain-community
 langchain-core
+langgraph
+pydantic
 python-dotenv
+requests
+streamlit
+uvicorn

@@ -4,7 +4,8 @@ name: Dataset Explorer AI Agent CI/CD (Develop)
 on:
   push:
     branches:
-      - main # main 브랜치에 푸시될 때 워크플로우 실행
+      #- main # main 브랜치에 푸시될 때 워크플로우 실행
+      - feature/t1/gitaction-test
   workflow_dispatch: # 수동 실행을 위한 트리거 추가
 
 env:
@@ -79,9 +80,17 @@ jobs:
             export DOCKER_REPO_BACKEND="${{ env.DOCKER_REPO_BACKEND }}"
             export DOCKER_REPO_FRONTEND="${{ env.DOCKER_REPO_FRONTEND }}" 
 
+            # 임시 환경 변수
+            export BEDROCK_MODEL_ID="${{ secrets.BEDROCK_MODEL_ID }}"
+            export AWS_REGION="${{ secrets.AWS_REGION }}"
+            export AWS_BEARER_TOKEN_BEDROCK="${{ secrets.AWS_BEARER_TOKEN_BEDROCK }}"
+
             # EC2에 클론된 프로젝트 디렉토리로 이동하여 deploy.sh 실행
             # cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent && bash devops/deploy/deploy.sh
             cd /home/${{ secrets.EC2_USERNAME }}/dataset-explorer-agent
+
+            # 컨테이너 정리
+            docker-compose down
 
             # 최신 이미지 가져오기 -> 
             # 최초 cicd 할때는 이미지를 모두 다운로드
@@ -89,7 +98,7 @@ jobs:
             docker-compose pull
 
             # 컨테이너 구성
-            docker-compose up -d
+            docker-compose up -d --build --force-recreate --remove-orphans
 
             # docker-compose.yml 구성이 변경되어서 
             # 이미지가 미사용되는것이 있을수 있음 -> 공간확보
