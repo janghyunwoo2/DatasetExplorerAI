@@ -19,6 +19,7 @@ tokenizer = BedrockEmbeddings(
 )
 # 2. 더미 데이터
 data = [
+    "데이터셋 제공 : 공공데이터 포털, 특징 : 한국어 지원, CSV 파일, URL : https://www.data.go.kr/data/15062804/fileData.do"
     "데이터셋 제공 : Google Dataset Search, 특징 : 한국어 지원, URL : https://datasetsearch.research.google.com/",
     "데이터셋 제공 : Kaggle Datasets, 특징 : 한국어 미지원, URL : https://www.kaggle.com/datasets",
     "데이터셋 제공 : UCI Machine Learning Repository, 특징 : 한국어 미지원, URL : https://archive.ics.uci.edu/ml/index.php"
