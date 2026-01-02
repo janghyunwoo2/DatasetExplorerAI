@@ -34,6 +34,22 @@ with st.sidebar:
                         # [중요] 로그인이 성공하면 세션 상태에 저장합니다.
                         st.session_state.logged_in = True
                         st.session_state.username = user_input
+                        
+                        # [추가] 백엔드에서 과거 대화 기록을 가져옵니다.
+                        try:
+                            # API_URL에서 '/chat'을 떼고 '/history/{user_input}'을 붙임
+                            history_url = API_URL.replace("/chat", f"/history/{user_input}")
+                            hist_res = req.get(history_url)
+                            
+                            if hist_res.status_code == 200:
+                                history_data = hist_res.json().get("history", [])
+                                if history_data:
+                                    st.session_state.messages = [
+                                        {'role':'assistant', 'content':'안녕하세요! 어떤 데이터셋이 필요하신가요?'}
+                                    ] + history_data
+                        except Exception as e:
+                            print(f"기록 불러오기 실패: {e}")
+
                         st.success(f"{user_input}님 환영합니다!")
                         st.rerun() # 화면을 새로고침하여 로그인 정보를 반영합니다.
                     else:
@@ -46,6 +62,9 @@ with st.sidebar:
         if st.button("로그아웃"):
             st.session_state.logged_in = False
             st.session_state.username = ""
+            st.session_state.messages = [
+                {'role':'assistant', 'content':'안녕하세요! 어떤 데이터셋이 필요하신가요?'}
+            ]
             st.rerun()
 
 # --- 대화 기록 초기화 ---
