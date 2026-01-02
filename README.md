@@ -12,8 +12,7 @@
 - venv 생성 및 실행
     ```
     python -m venv env
-    env/Scripts/Activate (실행하기)
-    deactivate (나가기)
+    env/Scripts/Activate
     ```
 
 - 백엔드 : back_web.py  
