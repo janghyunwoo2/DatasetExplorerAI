@@ -1,13 +1,58 @@
-# 1. 필요한 모듈 가져오기
+# 1. 필요한 도구들 가져오기
 from fastapi import FastAPI
+from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+from langchain_core.messages import HumanMessage
+import os
+import sys
+from dotenv import load_dotenv
 
-# 2. FastAPI 객체 생성 -> 변수명 중요(기억)
-app = FastAPI()
+# LLM 폴더 경로 추가 (agent_with_garph.py를 불러오기 위해)
+current_dir = os.path.dirname(os.path.abspath(__file__))  # Web/Back_end
+project_root = os.path.dirname(os.path.dirname(current_dir))  # DatasetExplorerAI
+llm_path = os.path.join(project_root, "LLM")
+sys.path.insert(0, llm_path)
 
-# 3. 라우팅 구성
-# 라우팅 : 유저가 요청하면(url이 전달) 
-# -> 이를 분석(해석) -> 어떤함수가 처리할지 연결(전달)
-@app.post("/chat") # 요청이 하나 왔는데 get방식으로 홈페이지(/) 요청
-def home():
-    # 응답 -> dict 형태 -> json 형식
-    return { "response":"hello fastapi!!"}
+# ⭐ LLM 폴더에서 에이전트 가져오기
+from agent_with_garph import graph_object
+
+# 2. 환경 변수 로드 (.env 파일 읽기)
+load_dotenv()
+
+# 3. 데이터 형식 정의 (프론트엔드와 맞춤)
+class ChatRequest(BaseModel):
+    question: str
+
+# 4. FastAPI 앱 설정
+app = FastAPI(title="데이터셋 탐험가 AI")
+
+# 5. 보안 설정 (Streamlit 연결 허용)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# 6. 실제 대화 처리 구간
+@app.post("/chat")
+async def chat_endpoint(req: ChatRequest):
+    try:
+        # 사용자의 질문을 그래프가 이해할 수 있는 형식으로 만듭니다.
+        prompt = {"messages": [HumanMessage(content=req.question)]}
+        
+        # 5번까지 재시도 하도록 설정
+        config = {"recursion_limit": 5} 
+
+        # ⭐ [중요] agent_with_garph.py에서 만든 랭그래프 객체 변수명을 'graph'라고 가정합니다.
+        # 만약 그 파일에서 변수명이 'app'이나 'workflow'라면 아래 이름을 그것으로 바꾸세요.
+        final_state = graph_object.invoke(prompt, config=config)
+        
+        # 마지막 AI의 답변만 추출합니다.
+        res = final_state["messages"][-1].content
+        
+        return {"response": res}
+        
+    except Exception as e:
+        print(f"에러 발생: {e}")
+        return {"response": f"백엔드 오류가 발생했습니다: {str(e)}"}
