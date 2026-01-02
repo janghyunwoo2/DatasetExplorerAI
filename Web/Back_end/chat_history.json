@@ -1,38 +1,12 @@
 {
-    "msg": [
-        {
-            "role": "user",
-            "content": "안녕"
-        },
-        {
-            "role": "assistant",
-            "content": "안녕하세요! 무엇을 도와드릴까요? 궁금한 점이나 필요한 데이터셋이 있다면 언제든지 말씀해주세요. 친절하고 전문적으로 답변드리겠습니다."
-        },
-        {
-            "role": "user",
-            "content": "내이름이뭐야?"
-        },
-        {
-            "role": "assistant",
-            "content": "저는 사용자의 이름을 기억하지 못합니다. 저는 개인 정보를 저장하거나 추적하지 않도록 설계되었기 때문입니다. \n\n혹시 다른 데이터셋 관련 질문이 있으시면 언제든지 말씀해주세요. 친절하고 전문적으로 답변드리겠습니다."
-        }
-    ],
     "admin": [
         {
             "role": "user",
-            "content": "안녕"
+            "content": "운동데이터가 필요해"
         },
         {
             "role": "assistant",
-            "content": "안녕하세요! 무엇을 도와드릴까요? 궁금한 점이나 필요한 데이터셋이 있다면 언제든지 말씀해주세요. 친절하고 전문적으로 답변드리겠습니다."
-        },
-        {
-            "role": "user",
-            "content": "안녕"
-        },
-        {
-            "role": "assistant",
-            "content": "안녕하세요! 다시 찾아주셔서 감사합니다. 어떤 데이터셋을 찾고 계신가요? 궁금한 점이나 필요한 데이터가 있다면 언제든지 말씀해주세요. 친절하고 전문적으로 답변드리겠습니다."
+            "content": "운동 데이터는 '공공데이터포털(data.go.kr)'에서 '국민체육진흥기금' 관련 데이터셋을 확인해 보시는 것을 추천합니다. '스포츠 시설 정보', '생활체육 참여율' 등의 데이터를 통해 운동 관련 통계를 얻으실 수 있습니다.\n\n만약 더 세분화된 개인 운동 데이터(예: 걸음 수, 운동 시간 등)가 필요하시다면, '구글 데이터셋(Google Dataset Search)'이나 '캐글(Kaggle)'에서 관련 데이터셋을 찾아보시는 것을 고려해 볼 수 있습니다. 다만, 개인 정보 보호 문제에 유의하여 데이터 사용 목적과 개인 정보 처리 방침을 꼼꼼히 확인하시기 바랍니다.\n\n*   **공공데이터포털:** [https://www.data.go.kr/](https://www.data.go.kr/)\n*   **구글 데이터셋:** [https://datasetsearch.research.google.com/](https://datasetsearch.research.google.com/)\n*   **캐글:** [https://www.kaggle.com/datasets](https://www.kaggle.com/datasets)"
         }
     ]
 }

@@ -4,10 +4,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from langchain_core.messages import HumanMessage, AIMessage
 import os
 import json
+import sys
 from dotenv import load_dotenv
 
-# 1. 환경 변수 및 외부 모듈 로드
-from agent_with_garph import *
+# LLM 폴더 경로 추가 (agent_with_garph.py를 불러오기 위해)
+current_dir = os.path.dirname(os.path.abspath(__file__))  # Web/Back_end
+project_root = os.path.dirname(os.path.dirname(current_dir))  # DatasetExplorerAI
+llm_path = os.path.join(project_root, "LLM")
+sys.path.insert(0, llm_path)
+
+# ⭐ LLM 폴더에서 에이전트 가져오기
+from agent_with_garph import graph_object
+
+# 2. 환경 변수 로드 (.env 파일 읽기)
 load_dotenv()
 
 # 2. 앱 객체 생성
