@@ -8,16 +8,12 @@ from dotenv import load_dotenv
 
 # ⭐ 시현 님이 만든 그래프 파일에서 모든 내용을 가져옵니다.
 # (파일 이름이 agent_with_garph.py 가 맞는지 꼭 확인하세요!)
-from agent_with_garph import * # 2. 환경 변수 로드 (.env 파일 읽기)
+from agent_with_garph_t3 import graph_object # 2. 환경 변수 로드 (.env 파일 읽기)
 load_dotenv()
 
 # 3. 데이터 형식 정의 (프론트엔드와 맞춤)
 class ChatRequest(BaseModel):
     question: str
-
-class LoginRequest(BaseModel):
-    username: str
-    password: str
 
 # 4. FastAPI 앱 설정
 app = FastAPI(title="데이터셋 탐험가 AI")
@@ -29,11 +25,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@app.post("/login")
-async def login_endpoint(req: LoginRequest):
-    print(f"로그인 시도 - ID: {req.username}, PW: {req.password}")
-    return {"message": "로그인 정보 수신 완료"}
 
 # 6. 실제 대화 처리 구간
 @app.post("/chat")
@@ -52,7 +43,6 @@ async def chat_endpoint(req: ChatRequest):
         # 마지막 AI의 답변만 추출합니다.
         res = final_state["messages"][-1].content
         
-        # res = "현재 점검 중입니다. (에이전트 연결 해제됨)"
         return {"response": res}
         
     except Exception as e:

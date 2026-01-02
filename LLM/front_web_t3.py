@@ -7,33 +7,9 @@ import os
 
 # 전역설정
 API_URL = os.getenv("FASTAPI_URL", "http://localhost:8000/chat") # fastapi 주소
-LOGIN_URL = "http://localhost:8000/login"
-
 st.set_page_config(page_title='데이터셋 탐험가 AI 에이전트')#, page_icon='')
 st.title('데이터셋 탐험가 AI 에이전트')
 st.caption('원하는 데이터셋의 특징을 입력하면, Agent가 이를 이해하고 관련 데이터셋을 탐색합니다.')
-
-# 사이드바 구성
-with st.sidebar:    
-    # 로그인 폼
-    st.header("로그인")
-    with st.form("login_form"):
-        username = st.text_input("아이디")
-        password = st.text_input("비밀번호", type="password")
-        submitted = st.form_submit_button("로그인")
-        
-        if submitted:
-            try:
-                res = req.post(LOGIN_URL, json={"username": username, "password": password})
-                if res.status_code == 200:
-                    st.success("로그인 정보가 전송되었습니다.")
-                else:
-                    st.error(f"전송 실패: {res.status_code}")
-            except Exception as e:
-                st.error(f"연결 오류: {e}")
-
-    #st.divider()
-
 
 # session state 초기화 -> 현재 코드가 몇번이고 재실행되더라고 데이터 유지,전역
 if "messages" not in st.session_state: # 최초에는 아무것도 없음(1회만 수행됨)
