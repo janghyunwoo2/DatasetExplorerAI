@@ -1,21 +1,8 @@
-# Core LLM & RAG (현재 설치된 버전으로 고정)
-langchain-aws==1.1.1
-langchain-community==0.4.1
-langchain-core==1.2.4
-langgraph==0.2.65
-
-# Vector Database
-faiss-cpu==1.13.2
-
-# AWS
-boto3==1.42.17
-
-# Web Framework
-fastapi==0.120.2
-uvicorn==0.27.0.post1
-streamlit==1.41.1
-
-# Utilities
-pydantic==2.12.5
-python-dotenv==1.0.1
-requests==2.32.3
+fastapi
+uvicorn
+streamlit
+requests
+boto3
+langchain-aws
+langchain-core
+python-dotenv
