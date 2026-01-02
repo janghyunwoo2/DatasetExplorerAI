@@ -25,3 +25,4 @@
     ```
     streamlit run front_web.py
     ```
+     
