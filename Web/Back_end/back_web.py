@@ -4,11 +4,19 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_core.messages import HumanMessage
 import os
+import sys
 from dotenv import load_dotenv
 
-# ⭐ 시현 님이 만든 그래프 파일에서 모든 내용을 가져옵니다.
-# (파일 이름이 agent_with_garph.py 가 맞는지 꼭 확인하세요!)
-from agent_with_garph import * # 2. 환경 변수 로드 (.env 파일 읽기)
+# LLM 폴더 경로 추가 (agent_with_garph.py를 불러오기 위해)
+current_dir = os.path.dirname(os.path.abspath(__file__))  # Web/Back_end
+project_root = os.path.dirname(os.path.dirname(current_dir))  # DatasetExplorerAI
+llm_path = os.path.join(project_root, "LLM")
+sys.path.insert(0, llm_path)
+
+# ⭐ LLM 폴더에서 에이전트 가져오기
+from agent_with_garph import graph_object
+
+# 2. 환경 변수 로드 (.env 파일 읽기)
 load_dotenv()
 
 # 3. 데이터 형식 정의 (프론트엔드와 맞춤)
