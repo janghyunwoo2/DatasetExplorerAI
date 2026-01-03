@@ -2,9 +2,11 @@ import streamlit as st
 import requests as req
 import os
 
-# 전역 설정
-API_URL = os.getenv("FASTAPI_URL", "http://localhost:8000/chat")
-LOGIN_URL = "http://localhost:8000/login"
+# 전역 설정 - FASTAPI_URL을 base URL로 사용
+BASE_URL = os.getenv("FASTAPI_URL", "http://localhost:8000")
+API_URL = f"{BASE_URL}/chat"
+LOGIN_URL = f"{BASE_URL}/login"
+
 
 st.set_page_config(page_title='데이터셋 탐험가 AI 에이전트')
 st.title('데이터셋 탐험가 AI 에이전트')
