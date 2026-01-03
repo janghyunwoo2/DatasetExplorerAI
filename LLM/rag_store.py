@@ -32,9 +32,11 @@ try:
         embeddings,
         allow_dangerous_deserialization=True
     )
-    print(f"[OK] FAISS DB 로드 완료: {DB_PATH}")
+    import sys
+    sys.stderr.write(f"[OK] FAISS DB 로드 완료: {DB_PATH}\n")
 except Exception as e:
-    print(f"[ERROR] FAISS DB 로드 실패: {e}")
+    import sys
+    sys.stderr.write(f"[ERROR] FAISS DB 로드 실패: {e}\n")
     raise
 
 # 3. 질의 > 검색(키워드, 질의) > 유사도 순으로 후보 K개 반환
