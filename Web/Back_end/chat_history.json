@@ -1,12 +1,1 @@
-{
-    "admin": [
-        {
-            "role": "user",
-            "content": "운동데이터가 필요해"
-        },
-        {
-            "role": "assistant",
-            "content": "운동 데이터는 '공공데이터포털(data.go.kr)'에서 '국민체육진흥기금' 관련 데이터셋을 확인해 보시는 것을 추천합니다. '스포츠 시설 정보', '생활체육 참여율' 등의 데이터를 통해 운동 관련 통계를 얻으실 수 있습니다.\n\n만약 더 세분화된 개인 운동 데이터(예: 걸음 수, 운동 시간 등)가 필요하시다면, '구글 데이터셋(Google Dataset Search)'이나 '캐글(Kaggle)'에서 관련 데이터셋을 찾아보시는 것을 고려해 볼 수 있습니다. 다만, 개인 정보 보호 문제에 유의하여 데이터 사용 목적과 개인 정보 처리 방침을 꼼꼼히 확인하시기 바랍니다.\n\n*   **공공데이터포털:** [https://www.data.go.kr/](https://www.data.go.kr/)\n*   **구글 데이터셋:** [https://datasetsearch.research.google.com/](https://datasetsearch.research.google.com/)\n*   **캐글:** [https://www.kaggle.com/datasets](https://www.kaggle.com/datasets)"
-        }
-    ]
-}
+{}
