@@ -4,7 +4,8 @@ name: Dataset Explorer AI Agent CI/CD (Develop)
 on:
   push:
     branches:
-      - feature/t1/gitaction-test # develop 브랜치에 푸시될 때 워크플로우 실행
+      - main # main 브랜치에 푸시될 때 워크플로우 실행
+      #- feature/t1/gitaction-test
   workflow_dispatch: # 수동 실행을 위한 트리거 추가
 
 env:
