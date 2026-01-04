@@ -1,0 +1,59 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info
+dist
+build
+*.egg
+
+# Virtual Environment
+env/
+venv/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test files
+test_*.py
+*_test.py
+
+# Documentation
+*.md
+!README.md
+
+# Archive
+archive/
+
+# Development files
+*.log
+*.pid
+*.seed
+*.coverage
+.pytest_cache
+
+# Environment files (should be set via docker-compose)
+.env
+.env.local
+
+# DevOps (don't copy into container)
+DevOps/dockerfiles/
+docker-compose.yml
+.dockerignore

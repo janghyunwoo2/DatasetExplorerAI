@@ -8,8 +8,12 @@ services:
     container_name: dataset_explorer_fastapi
     ports:
       - "8000:8000" # 호스트의 8000번 포트를 컨테이너의 8000번 포트로 연결 (외부 노출)
-    environment: # FastAPI가 사용할 환경 변수 (현재는 없음)
-       - APP_ENV=production
+    environment:
+      # FastAPI가 사용할 환경 변수
+      - APP_ENV=production
+      - AWS_REGION=${AWS_REGION}
+      - BEDROCK_MODEL_ID=${BEDROCK_MODEL_ID}
+      - AWS_BEARER_TOKEN_BEDROCK=${AWS_BEARER_TOKEN_BEDROCK}
     restart: always # 컨테이너가 실패하면 재시작
     networks:
       - app-network
@@ -23,15 +27,16 @@ services:
     ports:
       - "8501:8501" # 호스트의 8501번 포트를 컨테이너의 8501번 포트로 연결 (외부 노출)
     environment:
-      - FASTAPI_URL=http://backend-service:8000/chat # Streamlit이 FastAPI와 통신할 주소 (컨테이너 이름 사용)
+      - FASTAPI_URL=http://backend-service:8000 # Streamlit이 FastAPI와 통신할 주소 (컨테이너 이름 사용)
       - APP_ENV=production
     restart: always # 컨테이너가 실패하면 재시작
-    depends_on: # frontend-service가 backend-service보다 먼저 시작되지 않도록 보장 (헬스 체크 X)
+    depends_on:
+      # frontend-service가 backend-service보다 먼저 시작되지 않도록 보장 (헬스 체크 X)
       - backend-service
     networks:
       - app-network
 
 networks:
-  app-network: # Docker Compose 네트워크 정의
+  app-network:
+    # Docker Compose 네트워크 정의
     driver: bridge
-
