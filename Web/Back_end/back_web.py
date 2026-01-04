@@ -7,8 +7,11 @@ import json
 import sys
 from dotenv import load_dotenv
 
-# 2. FastAPI 객체 생성 -> 변수명 중요(기억)
-app = FastAPI()
+# LLM 폴더 경로 추가 (agent_with_garph.py를 불러오기 위해)
+current_dir = os.path.dirname(os.path.abspath(__file__))  # Web/Back_end
+project_root = os.path.dirname(os.path.dirname(current_dir))  # DatasetExplorerAI
+llm_path = os.path.join(project_root, "LLM")
+sys.path.insert(0, llm_path)
 
 # ⭐ LLM 폴더에서 에이전트 가져오기
 from agent_with_garph import graph_object

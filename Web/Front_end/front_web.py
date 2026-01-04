@@ -72,27 +72,13 @@ with st.sidebar:
 # --- 대화 기록 초기화 ---
 if "messages" not in st.session_state:
     st.session_state.messages = [
-<<<<<<< HEAD
-        # 페르소나는 백엔드에서 구성
-        {
-            'role':'assistant',
-            'content':'안녕하세요! 오늘 식사는 어떤 것이 땡기나요? (예산, 점심/저녁등 시점, 날씨, 기분, 단체여부등 알려주시면 메뉴를 추천해 드립니다.)'
-        }
-=======
         {'role':'assistant', 'content':'안녕하세요! 어떤 데이터셋이 필요하신가요?'}
->>>>>>> feature/t1/devops
     ]
 
 # 이전 대화 출력
 for msg in st.session_state.messages:
-<<<<<<< HEAD
-    # 존재하는 모든 대화 내용을 출력
-    with st.chat_message(msg['role']): # assistant or user
-        st.markdown(msg['content'])
-=======
     with st.chat_message(msg['role']):
         st.markdown(msg['content'], unsafe_allow_html=True)
->>>>>>> feature/t1/devops
 
 # --- 채팅 입력란 ---
 if prompt := st.chat_input('현재 상황을 자세히 입력하세요...'):
@@ -108,36 +94,6 @@ if prompt := st.chat_input('현재 상황을 자세히 입력하세요...'):
 
     # 3. AI 응답 처리
     with st.chat_message('assistant'):
-<<<<<<< HEAD
-        msg_holder = st.empty()
-        msg_holder.markdown('고민 중.... ㅡ,.ㅡ^')
-
-        # 3-1. 서버측 사용자의 질의 전송
-        result = None
-        #res = ''
-        try:
-            res = req.post(API_URL, json={"question":prompt})  
-            if res.status_code == 200: # 응답 성공
-                result = res.json().get('response','응답 없음')                
-            else:
-                result = f'서버측 오류 {res.status_code}'
-            # 추후, 백엔드 구성후 교체
-            #import time
-            #time.sleep(2) # 서버 통신 시간을 시뮬레이션
-            #res = "더미 응답 : 치킨으로 가보세요!!"
-        except Exception as e:
-            # 더미 구성
-            print( e )
-            result = "사용자가 너무 많습니다 10초후에 다시 시도해 주세요"
-        # 3-2. 화면처리
-        msg_holder.markdown( result )
-        # 3-3. 전역 상태 관리 변수에 추가
-        st.session_state.messages.append({
-            "role":"assistant",
-            "content":res
-        })
-        pass
-=======
         with st.spinner('데이터셋을 탐색하는 중입니다...🔍'):
             try:
                 # [수정 포인트] 백엔드 설계도(ChatRequest)에 맞춰 username과 question을 모두 보냅니다.
@@ -154,7 +110,6 @@ if prompt := st.chat_input('현재 상황을 자세히 입력하세요...'):
                     result = f'서버 오류: {res.status_code} - {res.text}'
             except Exception as e:
                 result = f"연결 오류가 발생했습니다: {e}"
->>>>>>> feature/t1/devops
 
         # 4. 결과 출력 및 저장
         st.markdown(result)

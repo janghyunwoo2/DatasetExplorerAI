@@ -1,0 +1,20 @@
+fastapi
+uvicorn
+streamlit
+requests
+boto3
+langchain-aws
+langchain-core
+langchain-community
+langgraph
+chromadb
+python-dotenv
+langchain-google-genai
+beautifulsoup4
+selenium # 동적 웹사이트용 (필요시)
+lxml
+tqdm
+pandas
+numpy
+faiss-cpu
+langchain
